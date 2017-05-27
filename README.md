@@ -136,7 +136,7 @@ $.getData("/path/to/api").then(function (result) {
 ### Peers
 
 ```js
-womrhole()
+wormhole()
 	.on("peers", function (peers) {
 		console.log("ids:", peers); // ["tab-id-1", "tab-id-2", ..]
 	})
@@ -184,7 +184,7 @@ Micro event emitter.
  * emit(type:`String`[, args:`*|Array`]):`this`
 
 ```js
-var obj = womrhole.Emitter.apply({}); // or new womrhole.Emitter();
+var obj = wormhole.Emitter.apply({}); // or new wormhole.Emitter();
 
 obj.on("foo", function () {
   console.log(arguments);
@@ -254,6 +254,11 @@ standardized by the Open Software Foundation (OSF) as part of the Distributed Co
 
 ---
 
+##### wormhole.debounce(fn:`Function`, wait:`Function`):`Function`
+Debounce is preventing a function from being called several times.
+
+---
+
 <a name="sw"></a>
 ### SharedWorker
 Not enabled by default, but:
@@ -262,8 +267,3 @@ Not enabled by default, but:
 <script>window.wormhole = {workers: true};</script>
 <script src="/vendor/wormhole.js"></script>
 ```
-
----
-
-
-##### wormhole.debounce(fn:`Function`, wait:`Function`):`Function`
