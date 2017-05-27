@@ -98,7 +98,7 @@ module.exports = function (grunt) {
 		function parse(src, exports) {
 			var content = grunt.file.read(src);
 
-			content = content.trim().replace(/define\((\[.*?\]).*?\n/, function (_, str) {
+			content = content.trim().replace(/define\((\[.*?\]).*?{/, function (_, str) {
 				JSON.parse(str).forEach(function (name) {
 					deps[name] = parse(file(name));
 				});
