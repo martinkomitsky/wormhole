@@ -1,10 +1,12 @@
 (function (window, document) {
 "use strict";
+
 	var now = Date.now || /* istanbul ignore next */ function () {
 		return +(new Date);
 	};
 
 	
+
 
 	var floor = Math.floor,
 		random = Math.random
@@ -50,6 +52,7 @@
 
 	
 
+
 	function debounce(func, delay, immediate) {
 		var timeout;
 
@@ -77,6 +80,7 @@
 
 
 	
+
 
 	var __emitter__ = '__emitter__';
 
@@ -213,17 +217,20 @@
 
 	
 
+
 	function getOwn(obj, prop) {
 		return !(prop in getOwn) && obj && obj.hasOwnProperty(prop) ? obj[prop] : null;
 	}
 
 	
 
+
 	var _corsId = 1,
 		_corsExpando = '__cors__',
 		_corsCallback = {},
 		_parseJSON = JSON.parse,
-		_stringifyJSON = JSON.stringify
+		_stringifyJSON = JSON.stringify,
+		_allowAccess = void 0
 	;
 
 
@@ -286,6 +293,46 @@
 		}
 	};
 
+	/**
+	 * Разрешение для конкретного `origin`
+	 * @param {*} origin
+	 */
+	cors.allowAccess = function (origin) {
+		if (typeof origin === 'string' || origin instanceof RegExp) {
+			_allowAccess = origin;
+		}
+	};
+
+	/**
+	 * Установка кастомного префикса `expando`
+	 * @param {String} expando
+	 */
+	cors.setExpando = function (expando) {
+		if (typeof expando === 'string') {
+			_corsExpando = expando;
+		}
+	};
+
+
+
+	
+
+	/**
+	 * Проверка на соответствие `targetOrigin`
+	 * @param {*} targetOrigin
+	 * @private
+	 */
+	function _checkAccess(targetOrigin) {
+		if (_allowAccess == void 0) {
+			return true;
+		} else if (_allowAccess instanceof RegExp) {
+			return _allowAccess.test(targetOrigin);
+		} else if (typeof _allowAccess === 'string') {
+			return targetOrigin === _allowAccess;
+		}
+
+		return false;
+	}
 
 	/**
 	 * Получение `postMessage`
@@ -293,16 +340,18 @@
 	 * @private
 	 */
 	function _onmessage(evt) {
-		evt = evt || /* istanbul ignore next */ window.event;
-
-		var id,
+		var origin,
+			id,
 			resp = {},
 			data = evt.data,
 			source = evt.source,
 			func;
 
+		evt = evt || /* istanbul ignore next */ window.event;
+		origin = evt.origin || evt.originalEvent.origin;
+
 		/* istanbul ignore else */
-		if (typeof data === 'string' && data.indexOf(_corsExpando) === 0) {
+		if (typeof data === 'string' && data.indexOf(_corsExpando) === 0 && _checkAccess(origin)) {
 			// Наше сообщение
 			try {
 				// Парсим данные
@@ -364,6 +413,7 @@
 
 
 	
+
 
 	var store,
 		_storage,
@@ -703,6 +753,7 @@
 
 	
 
+
 	var _stringifyJSON = JSON.stringify;
 
 
@@ -851,6 +902,7 @@
 
 
 	
+
 
 	var UPD_META_DELAY = 5 * 1000, // ms, как часто обновлять мата данные
 		MASTER_DELAY = UPD_META_DELAY * 2, // ms, сколько времени считать мастер живым
@@ -1614,6 +1666,7 @@
 
 	
 
+
 	var singletonHole = function () {
 		/* istanbul ignore else */
 		if (!singletonHole.instance) {
@@ -1628,7 +1681,7 @@
 
 
 	// Export
-	singletonHole.version = '0.7.2';
+	singletonHole.version = '0.8.0';
 	singletonHole.now = now;
 	singletonHole.uuid = uuid;
 	singletonHole.debounce = debounce;
